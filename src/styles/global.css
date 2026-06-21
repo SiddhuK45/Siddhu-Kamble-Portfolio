@@ -611,6 +611,7 @@
         }
 
         .stat-item {
+            width: 138px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius);
