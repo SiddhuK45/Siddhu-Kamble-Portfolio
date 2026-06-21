@@ -1418,3 +1418,20 @@ html, body {
     max-width: 1200px;
   }
 }
+
+
+/* ===== SCROLL INDICATOR MOBILE FIX ===== */
+@media (max-width: 480px) {
+  .scroll-indicator {
+    left: 50% !important;
+    transform: translateX(-43%) !important;
+  }
+}
+
+/* For tablets (481px–768px) – you can also add a similar rule if needed */
+@media (min-width: 481px) and (max-width: 768px) {
+  .scroll-indicator {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+}
