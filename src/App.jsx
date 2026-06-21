@@ -11,30 +11,39 @@ import Footer from './components/Footer';
 import Lenis from 'lenis';
 
 function App() {
-  // Smooth scrolling with Lenis
+  // Smooth scrolling with Lenis – only on desktop
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-    });
+    // Check if we are on a mobile device (width < 768px)
+    const isMobile = window.innerWidth < 768;
 
-    function raf(time) {
-      lenis.raf(time);
+    if (!isMobile) {
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 0, // disable touch on desktop (we rely on wheel)
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
       requestAnimationFrame(raf);
+
+      // Expose for scrollTo usage
+      window.lenis = lenis;
+
+      return () => lenis.destroy();
+    } else {
+      // On mobile, use native scrolling and set window.lenis to null
+      window.lenis = null;
     }
-    requestAnimationFrame(raf);
-
-    // Expose for scrollTo usage
-    window.lenis = lenis;
-
-    return () => lenis.destroy();
   }, []);
 
-  // Particles and glow cursor (they need DOM access)
+  // Particles and glow cursor (unchanged)
   useEffect(() => {
-    // ---- Particles ----
     const canvas = document.getElementById('particles-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -100,7 +109,6 @@ function App() {
     }
     animate();
 
-    // ---- Glow cursor ----
     const glow = document.getElementById('glow-cursor');
     const onMove = (e) => {
       glow.style.left = e.clientX + 'px';
